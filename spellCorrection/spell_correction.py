@@ -8,7 +8,7 @@ from difflib import SequenceMatcher
 from rich.console import Console
 from rich.text import Text
 
-console = Console()
+
 
 
 def highlight_differences(prepend_msg, original, modified, style_ok="green", style_replace="bold red", style_insert="bold magenta", style_delete="bold strike yellow"):
@@ -48,6 +48,7 @@ def highlight_differences(prepend_msg, original, modified, style_ok="green", sty
 
     return highlighted_text
 
+
 def count_differences(original, modified):
     matcher = SequenceMatcher(None, original, modified)
     count_equal = 0
@@ -70,6 +71,7 @@ def count_differences(original, modified):
 
     return { 'equal': count_equal, 'replace': count_replace, 'insert': count_insert, 'delete': count_delete }
 
+
 def get_highlighted_differences_counter(prepend_msg, original_phrase, modified_phrase, style_ok="green", style_replace="bold red", style_insert="bold magenta", style_delete="bold yellow"):
     counters=count_differences(original_phrase, modified_phrase)
     highlighted_text = Text()
@@ -79,6 +81,7 @@ def get_highlighted_differences_counter(prepend_msg, original_phrase, modified_p
     highlighted_text.append(f"insert : {counters['insert']}, ", style=style_insert)
     highlighted_text.append(f"delete : {counters['delete']}", style=style_delete)
     return highlighted_text
+
 
 def compare_phrases(original, modified):
     matcher = SequenceMatcher(None, original, modified)
@@ -167,37 +170,70 @@ def corriger_orthographe_03(texte):
   Returns:
       Le texte corrigé.
   """
+  # https://pypi.org/project/language-tool-python/
   # Initialize the LanguageTool spell checker for French
-  spell = language_tool_python.LanguageTool('fr-FR')
-  matches = spell.check(texte)
-  texte_corrige = language_tool_python.utils.correct(texte, matches)
-  return texte_corrige
+  with language_tool_python.LanguageTool('fr-FR') as tool:
+      matches = tool.check(texte)
+      texte_corrige = language_tool_python.utils.correct(texte, matches)
+      return texte_corrige
 
 
 if __name__ == '__main__':
+    import sys
 
+    console = Console()
     GoDEBUG = False
-    # Exemple d'utilisation
-    texte_faux =    "Voici un exenple de texte, de l'auteur François Martin, avic moins de 24 fotes d'ortographe."
-    texte_correct = "Voici un exemple de texte, de l'auteur François Martin, avec moins de 24 fautes d'orthographe."
-    console.print(highlight_differences("Texte ok   :\t",texte_correct, texte_correct, style_ok="bold white"))
-    console.print(get_highlighted_differences_counter("Texte ok   :\t", texte_correct, texte_correct, style_ok="bold white"))
-    console.print(highlight_differences("Texte faux :\t",texte_correct, texte_faux , style_ok="white"))
-    console.print(get_highlighted_differences_counter("Texte faux :\t", texte_correct, texte_faux, style_ok="white"))
-    texte_corrige_01 = corriger_orthographe_01(texte_faux)
-    console.print(highlight_differences("spellchecker :\t", texte_correct,texte_corrige_01))
-    console.print(get_highlighted_differences_counter("spellchecker :\t", texte_correct, texte_corrige_01))
-    if GoDEBUG:
-        different_words = compare_phrases(texte_corrige_01, texte_correct)
-        for diff in different_words:
-          print(f"Opération : {diff['operation']}")
-          print(f"Texte incorrect : {diff['original_text']}")
-          print(f"Texte correct : {diff['modified_text']}")
-          print(diff)
+    # check number of arguments
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-d":
+            GoDEBUG = True
 
-    texte_corrige_02 = corriger_orthographe_02(texte_faux)
-    console.print(highlight_differences(" hunspell    :\t", texte_correct, texte_corrige_02))
-    console.print(get_highlighted_differences_counter(" hunspell    :\t", texte_correct, texte_corrige_02))
-    texte_corrige_03 = corriger_orthographe_03(texte_faux)
-    console.print(highlight_differences("LanguageTool :\t", texte_correct, texte_corrige_03, ))
-    console.print(get_highlighted_differences_counter("LanguageTool :\t", texte_correct, texte_corrige_03))
+        if sys.argv[1] == "-h":
+            print("Usage: python3 spell_correction.py [-d] [-h] \"texte à corriger\" ")
+            print("Options:")
+            print("\t-d\tDebug mode")
+            print("\t-h\tHelp")
+
+        texte_a_corriger = sys.argv[len(sys.argv)-1]
+        texte_corrige_01 = corriger_orthographe_01(texte_a_corriger)
+        console.print(highlight_differences("spellchecker :\t", texte_a_corriger, texte_corrige_01))
+        console.print(get_highlighted_differences_counter("spellchecker :\t", texte_a_corriger, texte_corrige_01))
+
+        texte_corrige_02 = corriger_orthographe_02(texte_a_corriger)
+        console.print(highlight_differences(" hunspell    :\t", texte_a_corriger, texte_corrige_02))
+        console.print(get_highlighted_differences_counter(" hunspell    :\t", texte_a_corriger, texte_corrige_02))
+
+        texte_corrige_03 = corriger_orthographe_03(texte_a_corriger)
+        console.print(highlight_differences("LanguageTool :\t", texte_a_corriger, texte_corrige_03))
+        console.print(get_highlighted_differences_counter("LanguageTool :\t", texte_a_corriger, texte_corrige_03))
+
+    else:
+
+        # Exemple d'utilisation
+        texte_faux =    "Voici un exenple de texte, de l'auteur François Martin, avic moins de 24 fotes d'ortographe."
+        texte_correct = "Voici un exemple de texte, de l'auteur François Martin, avec moins de 24 fautes d'orthographe."
+        console.print(highlight_differences("Texte ok   :\t",texte_correct, texte_correct, style_ok="bold white"))
+        console.print(get_highlighted_differences_counter("Texte ok   :\t", texte_correct, texte_correct, style_ok="bold white"))
+
+        console.print(highlight_differences("Texte faux :\t",texte_correct, texte_faux , style_ok="white"))
+        console.print(get_highlighted_differences_counter("Texte faux :\t", texte_correct, texte_faux, style_ok="white"))
+
+        texte_corrige_01 = corriger_orthographe_01(texte_faux)
+        console.print(highlight_differences("spellchecker :\t", texte_correct,texte_corrige_01))
+        console.print(get_highlighted_differences_counter("spellchecker :\t", texte_correct, texte_corrige_01))
+
+        if GoDEBUG:
+            different_words = compare_phrases(texte_corrige_01, texte_correct)
+            for diff in different_words:
+              print(f"Opération : {diff['operation']}")
+              print(f"Texte incorrect : {diff['original_text']}")
+              print(f"Texte correct : {diff['modified_text']}")
+              print(diff)
+
+        texte_corrige_02 = corriger_orthographe_02(texte_faux)
+        console.print(highlight_differences(" hunspell    :\t", texte_correct, texte_corrige_02))
+        console.print(get_highlighted_differences_counter(" hunspell    :\t", texte_correct, texte_corrige_02))
+
+        texte_corrige_03 = corriger_orthographe_03(texte_faux)
+        console.print(highlight_differences("LanguageTool :\t", texte_correct, texte_corrige_03, ))
+        console.print(get_highlighted_differences_counter("LanguageTool :\t", texte_correct, texte_corrige_03))
