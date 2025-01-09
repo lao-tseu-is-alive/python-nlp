@@ -8,8 +8,6 @@ from ollama import ChatResponse
 
 
 
-
-
 if __name__ == '__main__':
     cmd = sys.argv[0]
     GoDEBUG = False
@@ -30,6 +28,7 @@ if __name__ == '__main__':
             UserQuestion = sys.argv[1]
 
     print(f"User Question: {UserQuestion}")
+
     response: ChatResponse = chat(model=modelName, messages=[
         {"role": "user", "content": UserQuestion}
     ])
