@@ -193,6 +193,7 @@ if __name__ == '__main__':
             print("Options:")
             print("\t-d\tDebug mode")
             print("\t-h\tHelp")
+            sys.exit(0)
 
         texte_a_corriger = sys.argv[len(sys.argv)-1]
         texte_corrige_01 = corriger_orthographe_01(texte_a_corriger)

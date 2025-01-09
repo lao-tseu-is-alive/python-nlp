@@ -8,5 +8,6 @@ pip install spacy
 pip install spellchecker
 pip install pyspellchecker
 pip install language_tool_python
+pip install ollama
 python -m spacy download fr_core_news_lg
 
