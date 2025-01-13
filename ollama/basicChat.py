@@ -7,13 +7,11 @@ from ollama import ChatResponse
 
 
 
-
 if __name__ == '__main__':
     cmd = sys.argv[0]
     GoDEBUG = False
     UserQuestion="How to make the world a better place ?"
     print(f"Welcome to {cmd}")
-    print("list of LLM models:", ollama.list())
     # check
     modelName="mistral-nemo"
     if len(sys.argv) > 1:

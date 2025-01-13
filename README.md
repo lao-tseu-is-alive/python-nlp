@@ -14,3 +14,10 @@ pyenv local python-nlp
 
 
 
+
+### tools and libs used
+- [spaCy](https://spacy.io/) for NLP
+- [ollama](https://github.com/ollama/ollama) A Golang way to interact with LLM 
+- [ollama-python](https://github.com/ollama/ollama-python)
+- [Langchain](https://python.langchain.com/) 
+- [LLamaIndex](https://docs.llamaindex.ai/en/stable/)

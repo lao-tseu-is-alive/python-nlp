@@ -4,6 +4,7 @@ from ollama import ListResponse
 response: ListResponse = list()
 
 for model in response.models:
+    print(repr(model))
     print(f'Name: {model.model}')
     print(f'\tSize (MB):\t{(model.size.real / 1024 / 1024):.2f}')
     if model.details:
