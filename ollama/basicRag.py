@@ -3,9 +3,9 @@ from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.ollama import Ollama
 
 info =  """
-This example demonstrates how to use the Ollama model for question answering.
-With the data inside the data folder, we can use the Ollama model to answer questions.
-this is a bare minimum Retrieval Augmented Generation or RAG example build using LlamaIndex.
+This example demonstrates how to use a local Ollama model for question answering.
+This is a bare minimum "Retrieval Augmented Generation" or RAG example build using LlamaIndex.
+With the data inside the data folder, we use the Ollama model to answer questions about the text files.
 https://docs.llamaindex.ai/en/stable/getting_started/starter_example_local/ 
 """
 
