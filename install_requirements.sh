@@ -9,5 +9,7 @@ pip install spellchecker
 pip install pyspellchecker
 pip install language_tool_python
 pip install ollama
+pip install llama-index
+pip install llama-index-core llama-index-readers-file llama-index-llms-ollama llama-index-embeddings-huggingface
 python -m spacy download fr_core_news_lg
 
