@@ -87,3 +87,7 @@ wheel==0.45.1
 wrapt==1.17.0
 
 llama-index-core~=0.12.10.post1
+streamlit~=1.42.0
+langchain~=0.3.17
+langchain-community~=0.3.16
+langchain-experimental~=0.3.4
